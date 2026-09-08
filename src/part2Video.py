@@ -9,6 +9,8 @@ from detector import build_mask, find_shapes
 vid = cv2.VideoCapture('data/PennAirVideo.mp4')
 if not vid.isOpened():
     raise FileNotFoundError("check the video path")
+ret, frame = vid.read()
+
 
 while True:
     ret, frame = vid.read()

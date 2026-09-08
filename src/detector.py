@@ -2,11 +2,11 @@ import cv2
 
 
 def build_mask(img):
-    blurImg = cv2.GaussianBlur(img, (5, 5), 0)
+    blurImg = cv2.GaussianBlur(img, (7, 7), 0)
     hsv = cv2.cvtColor(blurImg, cv2.COLOR_BGR2HSV)
     v = hsv[:, :, 2]
 
-    mask = cv2.inRange(v, 130, 255)
+    mask = cv2.inRange(v, 150, 255)
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
