@@ -10,7 +10,7 @@ h, s, v = cv2.split(hsv)
 
 mask = cv2.inRange(v, 130, 255)
 
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))
 mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
