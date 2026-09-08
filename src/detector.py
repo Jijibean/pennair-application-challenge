@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 
 def build_mask(img):
@@ -27,3 +28,21 @@ def find_shapes(mask, min_area=1000):
         cy = int(M["m01"] / M["m00"])
         shapes.append((contour, (cx, cy)))
     return shapes
+
+def build_mask_flood(img, var_thresh=100, window=11):
+    blurred = cv2.GaussianBlur(img, (5, 5), 0)
+    gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY).astype("float32")
+    mean = cv2.blur(gray, (window, window))
+    sq_mean = cv2.blur(gray * gray, (window, window))
+    variance = sq_mean - mean * mean
+
+    bg = cv2.inRange(variance, var_thresh, 1e9)
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))
+    bg = cv2.morphologyEx(bg, cv2.MORPH_CLOSE, kernel)
+
+    h, w = bg.shape
+    ff_mask = np.zeros((h + 2, w + 2), np.uint8)
+    filled = bg.copy()
+    cv2.floodFill(filled, ff_mask, (0, 0), 255)
+
+    return cv2.bitwise_not(filled)
